@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leave a Review | Central City Car Painters, Dunedin</title>
+<meta name="description" content="Tell us how we did. Rate your experience with Central City Car Painters in Dunedin.">
+<meta name="theme-color" content="#0d0e11">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .rev-wrap{min-height:100svh;display:flex;align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden;padding:120px 20px 60px}
+  .rev-wrap::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 15%,rgba(255,59,31,.18),transparent 60%)}
+  .rev-card{position:relative;z-index:1;max-width:640px;width:100%;text-align:center;color:#fff}
+  .rev-card .eyebrow{justify-content:center;margin-bottom:18px}
+  .rev-card h1{font-size:clamp(2rem,5vw,3.2rem);margin-bottom:14px}
+  .rev-card>p{color:var(--muted-d);max-width:46ch;margin:0 auto 40px}
+  .star-pick{display:flex;justify-content:center;gap:10px;margin-bottom:30px}
+  .star-pick button{background:none;border:0;cursor:pointer;padding:6px;line-height:0;transition:transform .15s var(--ease)}
+  .star-pick button svg{width:46px;height:46px;color:rgba(255,255,255,.22);transition:color .15s,transform .15s}
+  .star-pick button:hover{transform:translateY(-4px) scale(1.08)}
+  .star-pick.hovering button svg{color:rgba(255,255,255,.22)}
+  .star-pick button.lit svg{color:var(--accent)}
+  .rev-hint{color:var(--muted-d);font-size:.92rem;min-height:1.4em;text-transform:uppercase;letter-spacing:.14em;font-family:"Oswald";font-size:.8rem}
+  .rev-back{margin-top:40px}
+  .rev-back a{color:var(--muted-d);font-family:"Oswald";text-transform:uppercase;letter-spacing:.08em;font-size:.85rem}
+  .rev-back a:hover{color:#fff}
+  .logo-top{display:inline-flex;align-items:center;gap:11px;color:#fff;margin-bottom:34px}
+</style>
+</head>
+<body>
+<div class="rev-wrap">
+  <div class="rev-card">
+    <a href="index.html" class="brand logo-top"><span class="logo">CC</span><span style="text-align:left"><b>Central City</b><small>Car Painters · Dunedin</small></span></a>
+    <span class="eyebrow">Your Feedback</span>
+    <h1>How did we do?</h1>
+    <p>Tap a star to rate your experience with Central City Car Painters. Your honest feedback means a lot to a small Dunedin team.</p>
+    <div class="star-pick" id="starPick" role="radiogroup" aria-label="Rate from 1 to 5 stars">
+      <button data-v="1" aria-label="1 star"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg></button>
+      <button data-v="2" aria-label="2 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg></button>
+      <button data-v="3" aria-label="3 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg></button>
+      <button data-v="4" aria-label="4 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg></button>
+      <button data-v="5" aria-label="5 stars"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg></button>
+    </div>
+    <div class="rev-hint" id="hint">Tap to rate</div>
+    <div class="rev-back"><a href="index.html">← Back to website</a></div>
+  </div>
+</div>
+<script>
+  // 4-5 stars -> Google review; 1-3 stars -> private feedback form
+  var GOOGLE_REVIEW_URL = "https://g.page/r/PLACEHOLDER";
+  var pick = document.getElementById("starPick");
+  var hint = document.getElementById("hint");
+  var btns = Array.prototype.slice.call(pick.querySelectorAll("button"));
+  var labels = ["", "We're sorry to hear that", "Let's make it right", "Tell us what to improve", "Great — glad you're happy!", "Brilliant — thank you!"];
+
+  function light(n){ btns.forEach(function(b){ b.classList.toggle("lit", +b.dataset.v <= n); }); }
+  btns.forEach(function(b){
+    b.addEventListener("mouseenter", function(){ light(+b.dataset.v); hint.textContent = labels[+b.dataset.v]; });
+    b.addEventListener("focus", function(){ light(+b.dataset.v); hint.textContent = labels[+b.dataset.v]; });
+    b.addEventListener("click", function(){
+      var v = +b.dataset.v;
+      light(v);
+      hint.textContent = labels[v];
+      setTimeout(function(){
+        if (v >= 4){ window.location.href = GOOGLE_REVIEW_URL; }
+        else { window.location.href = "private.html?rating=" + v; }
+      }, 320);
+    });
+  });
+  pick.addEventListener("mouseleave", function(){ light(0); hint.textContent = "Tap to rate"; });
+</script>
+</body>
+</html>

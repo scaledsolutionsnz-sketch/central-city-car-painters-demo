@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Share Your Feedback | Central City Car Painters, Dunedin</title>
+<meta name="description" content="Tell Central City Car Painters how we can do better. Your feedback goes straight to the team.">
+<meta name="theme-color" content="#0d0e11">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .pf-wrap{min-height:100svh;display:flex;align-items:center;justify-content:center;background:var(--ink);position:relative;overflow:hidden;padding:110px 20px 60px}
+  .pf-wrap::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 12%,rgba(255,59,31,.16),transparent 58%)}
+  .pf-card{position:relative;z-index:1;max-width:560px;width:100%}
+  .pf-head{text-align:center;color:#fff;margin-bottom:28px}
+  .pf-head .brand{justify-content:center;margin-bottom:24px}
+  .pf-head .eyebrow{justify-content:center;margin-bottom:14px}
+  .pf-head h1{font-size:clamp(1.8rem,4.5vw,2.6rem);margin-bottom:10px}
+  .pf-head p{color:var(--muted-d);max-width:42ch;margin:0 auto}
+  .pf-rating{display:flex;justify-content:center;gap:5px;margin:16px 0 0}
+  .pf-rating svg{width:24px;height:24px;color:rgba(255,255,255,.22)}
+  .pf-rating svg.lit{color:var(--accent)}
+  .success{display:none;text-align:center;color:#fff;background:var(--charcoal-2);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:46px 32px}
+  .success.show{display:block}
+  .success .ok{width:72px;height:72px;border-radius:50%;background:var(--accent);display:grid;place-items:center;margin:0 auto 22px}
+  .success .ok svg{width:36px;height:36px;color:#fff}
+  .success h2{font-size:1.7rem;margin-bottom:10px}
+  .success p{color:var(--muted-d);margin-bottom:26px}
+</style>
+</head>
+<body>
+<div class="pf-wrap">
+  <div class="pf-card">
+    <div class="pf-head" id="head">
+      <a href="index.html" class="brand"><span class="logo">CC</span><span style="text-align:left"><b>Central City</b><small>Car Painters · Dunedin</small></span></a>
+      <span class="eyebrow">Private Feedback</span>
+      <h1>Help us put it right</h1>
+      <p>Thanks for being honest. This goes straight to the team — not public — so we can fix what didn't hit the mark.</p>
+      <div class="pf-rating" id="ratingStars" aria-hidden="true"></div>
+    </div>
+
+    <form class="form" id="pfForm" action="https://formsubmit.co/centralcityltd2025@gmail.com" method="POST">
+      <input type="hidden" name="_subject" value="Private feedback — Central City Car Painters">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://central-city-car-painters-demo.vercel.app/private.html?sent=1">
+      <input type="hidden" name="rating" id="ratingField" value="">
+      <div class="two">
+        <div class="field"><label for="name">Name</label><input id="name" type="text" name="name" placeholder="Your name" required></div>
+        <div class="field"><label for="email">Email</label><input id="email" type="email" name="email" placeholder="you@email.co.nz" required></div>
+      </div>
+      <div class="field">
+        <label for="ratingSelect">Your rating</label>
+        <select id="ratingSelect" name="rating_label">
+          <option value="1">★ — 1 star</option>
+          <option value="2">★★ — 2 stars</option>
+          <option value="3">★★★ — 3 stars</option>
+        </select>
+      </div>
+      <div class="field"><label for="feedback">What let us down?</label><textarea id="feedback" name="feedback" placeholder="Tell us what happened and how we could have done better…" required></textarea></div>
+      <button class="btn btn-accent" type="submit">Send Feedback</button>
+    </form>
+
+    <div class="success" id="success">
+      <div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
+      <h2>Thank you</h2>
+      <p>Your feedback has reached the team at Central City Car Painters. We take it seriously and will be in touch if it's something we can put right.</p>
+      <a class="btn btn-dark" href="index.html">Back to Website</a>
+    </div>
+  </div>
+</div>
+<script>
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    var rating = parseInt(params.get("rating"), 10);
+    if (!(rating >= 1 && rating <= 5)) rating = 3;
+
+    // reflect rating in stars + hidden field + select
+    var starWrap = document.getElementById("ratingStars");
+    var starSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.9 21l1.2-6.8-5-4.9 6.9-1z"/></svg>';
+    for (var i=1;i<=5;i++){ starWrap.insertAdjacentHTML("beforeend", starSvg); }
+    Array.prototype.slice.call(starWrap.children).forEach(function(s,idx){ if(idx < rating) s.classList.add("lit"); });
+    document.getElementById("ratingField").value = rating;
+    var sel = document.getElementById("ratingSelect");
+    if (rating <= 3) sel.value = String(rating);
+
+    // success state after FormSubmit redirect (?sent=1)
+    if (params.get("sent") === "1"){
+      document.getElementById("head").style.display = "none";
+      document.getElementById("pfForm").style.display = "none";
+      document.getElementById("success").classList.add("show");
+    }
+
+    // graceful inline success if submitted same-page
+    document.getElementById("pfForm").addEventListener("submit", function(){
+      try { sessionStorage.setItem("pf_sent","1"); } catch(e){}
+    });
+  })();
+</script>
+</body>
+</html>
